@@ -79,12 +79,12 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
     
     ```bash
     $ ibmcloud login
-    $ ibmcloud cs cluster-config mycluster
+    $ ibmcloud ks cluster-config mycluster
     出力結果の`export xxx`をターミナル上でペーストする
     $ export xxxx
     $ kubectl get nodes
     XXXXXXX 正常に実行できることが確認できればOK
-    $ ibmcloud cs cluster-get mycluster
+    $ ibmcloud ks cluster-get mycluster
     ```
 
 4. Helmの初期化を行います。
@@ -169,7 +169,7 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
     > ワーカーノードの `Public IP` は以下のように確認します。
     > 
     > ```bash
-    > $ ibmcloud cs workers mycluster
+    > $ ibmcloud ks workers mycluster
     > OK
     > ID                                                 Public IP       Private IP      Machine Type   State    Status   Zone    Version
     > kube-hou02-pa705552a5a95d4bf3988c678b438ea9ec-w1   184.173.52.92   10.76.217.175   free           normal   Ready    hou02   1.10.12_1543

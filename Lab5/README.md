@@ -121,7 +121,7 @@
   >補足3:  
   > IBM Cloud CLIを使ったSecretの生成
   > 
-  > IBM Cloudでは、KubernetesクラスターとIBM Cloudのサービスの接続を容易にするためのコマンド`ibmcloud cs cluster-service-bind`が用意されています。この方法でも`Secret`を作成できます。詳しくは[こちら](https://cloud.ibm.com/docs/containers/cs_integrations.html#adding_cluster)を参照してください。 
+  > IBM Cloudでは、KubernetesクラスターとIBM Cloudのサービスの接続を容易にするためのコマンド`ibmcloud ks cluster-service-bind`が用意されています。この方法でも`Secret`を作成できます。詳しくは[こちら](https://cloud.ibm.com/docs/containers/cs_integrations.html#adding_cluster)を参照してください。 
 
 
 ## 3) `MMSSearch`アプリケーションのデプロイ
@@ -201,7 +201,7 @@
     > ワーカーノードの `Public IP` は以下のように確認します。
     > 
     > ```bash
-    > $ ibmcloud cs workers mycluster
+    > $ ibmcloud ks workers mycluster
     > OK
     > ID                                                 Public IP       Private IP      Machine Type   State    Status   Zone    Version
     > kube-hou02-pa705552a5a95d4bf3988c678b438ea9ec-w1   184.173.52.92   10.76.217.175   free           normal   Ready    hou02   1.10.12_1543

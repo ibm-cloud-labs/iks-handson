@@ -91,7 +91,7 @@ Lab1〜3ではWebサイトのゲストブック機能を提供するシンプル
    実行例:
 
    ```bash
-   $ ibmcloud cs workers mycluster
+   $ ibmcloud ks workers mycluster
    OK
    ID                                                 Public IP       Private IP      Machine Type   State    Status   Zone    Version
    kube-hou02-pa705552a5a95d4bf3988c678b438ea9ec-w1   184.173.52.92   10.76.217.175   free           normal   Ready    hou02   1.10.12_1543
