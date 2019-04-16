@@ -21,14 +21,14 @@ Lab 3では大きく以下の2つを体験します。
 ```bash
 マニフェストファイルが用意されているリポジトリのクローンとディレクトリ移動
 
-$ git clone https://github.com/capsmalt/guestbook.git
-$ cd guestbook/v1
+$ git clone https://github.com/cloud-handson/guestbook.git
+$ cd guestbook/v2
 ```
 
 ## 1. マニフェストファイルを使用したアプリケーションのデプロイとスケーリング
 ここでは以下の3つの操作を実施します。
 
-- `guestbook-deployment.yaml` を使って `guestbook-v1`という名前のdeploymentを作成しアプリケーションをデプロイする (replicas=3 指定済)
+- `guestbook-deployment.yaml` を使って `guestbook-v2`という名前のdeploymentを作成しアプリケーションをデプロイする (replicas=3 指定済)
 - `guestbook-deployment.yaml` を編集して **3台**構成から**5台**構成にスケーリングさせる
 - `guestbook-service.yaml` を使って `guestbook` という名前のserviceを作成し外部からアクセス可能な状態にする
 
@@ -36,38 +36,42 @@ $ cd guestbook/v1
 
 ### まずは，`guestbook`アプリケーションの`deployment`の構成を見てみましょう。
 
-1. **guestbook/v1/guestbook-deployment.yaml**  を任意のエディタで開きます。  
+1. **guestbook/v2/guestbook-deployment.yaml**  を任意のエディタで開きます。  
 
   ```yaml
   apiVersion: apps/v1
   kind: Deployment
   metadata:
-    name: guestbook-v1
+    name: guestbook-v2
     labels:
       app: guestbook
-      version: "1.0"
+      version: "2.0"
   spec:
-    replicas: 3
     selector:
       matchLabels:
         app: guestbook
+    replicas: 3
     template:
       metadata:
         labels:
           app: guestbook
-          version: "1.0"
+          version: "2.0"
       spec:
         containers:
         - name: guestbook
-          image: ibmcom/guestbook:v1
+          image: ibmcom/guestbook:v2
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
           ports:
-          - name: http-server
+          - name: http
             containerPort: 3000
   ```
 
-  上記の構成ファイルでは，`guestbook-v1`という名前の`deployment`オブジェクトを作成しています。  
+  上記の構成ファイルでは，`guestbook-v2`という名前の`deployment`オブジェクトを作成しています。  
   Deployment定義の場合は `spec: `にレプリカ数や，使用するコンテナイメージ，ポートなどを指定します。
-  今回の例では`deployment`の構成要素として`ibmcom/guestbook:v1`というコンテナイメージが指定され，これが`Pod`として生成されます。
+  今回の例では`deployment`の構成要素として`ibmcom/guestbook:v2`というコンテナイメージが指定され，これが`Pod`として生成されます。
   また，`Replicaset`として`Pod`の数が3つに指定(`replicas: 3`)されているため，Kubernetesは常に3つのアクティブな`Pod`が動作するよう動きます。
 
   >補足:  
@@ -82,7 +86,7 @@ $ cd guestbook/v1
 
   ```bash
   $ kubectl create -f guestbook-deployment.yaml
-  deployment.apps/guestbook-v1 created
+  deployment.apps/guestbook-v2 created
   ```
 
 3. ラベル(`label`)が `app=guestbook` であるPod一覧を表示します。  
@@ -106,7 +110,7 @@ $ cd guestbook/v1
 
 4. マニフェストファイルを変更してPodをスケーリングさせてみましょう。
 
-  **guestbook/v1/guestbook-deployment.yaml** を任意のエディタで開いて `spec.replicas` の値を `replicas: 5` に変更します。
+  **guestbook/v2/guestbook-deployment.yaml** を任意のエディタで開いて `spec.replicas` の値を `replicas: 5` に変更します。
 
   ```yaml
   ...
@@ -135,11 +139,11 @@ $ cd guestbook/v1
   ```bash
   $ kubectl get pods -l app=guestbook
   NAME                           READY   STATUS    RESTARTS   AGE
-  guestbook-v1-7fc76dc46-592gm   1/1     Running   0          1m
-  guestbook-v1-7fc76dc46-dcjwg   1/1     Running   0          26m
-  guestbook-v1-7fc76dc46-f7tzx   1/1     Running   0          26m
-  guestbook-v1-7fc76dc46-k7nnq   1/1     Running   0          1m
-  guestbook-v1-7fc76dc46-zgckk   1/1     Running   0          26m
+  guestbook-v2-7fc76dc46-592gm   1/1     Running   0          1m
+  guestbook-v2-7fc76dc46-dcjwg   1/1     Running   0          26m
+  guestbook-v2-7fc76dc46-f7tzx   1/1     Running   0          26m
+  guestbook-v2-7fc76dc46-k7nnq   1/1     Running   0          1m
+  guestbook-v2-7fc76dc46-zgckk   1/1     Running   0          26m
   ```
 
   Podの数が5つに増えていることが確認できます。一番右側の`AGE`列を見るとが2つだけ新しくなっていますね。  
@@ -150,7 +154,7 @@ $ cd guestbook/v1
   >補足2:  
   > `kubectl edit` で直接編集することもできます。
   > ```bash
-  > $ kubectl edit deployment guestbook-v1
+  > $ kubectl edit deployment guestbook-v2
   > 
   > "replicas: 3" のように変更しても良いです。
   > 未編集の場合は，":q"で終了します。
@@ -163,26 +167,26 @@ $ cd guestbook/v1
   > ```bash
   > $ kubectl get pods -l app=guestbook
   > NAME                           READY   STATUS        RESTARTS   AGE
-  > guestbook-v1-7fc76dc46-592gm   0/1     Terminating   0          3m
-  > guestbook-v1-7fc76dc46-dcjwg   1/1     Running       0          28m
-  > guestbook-v1-7fc76dc46-f7tzx   1/1     Running       0          28m
-  > guestbook-v1-7fc76dc46-k7nnq   0/1     Terminating   0          3m
-  > guestbook-v1-7fc76dc46-zgckk   1/1     Running       0          28m
+  > guestbook-v2-7fc76dc46-592gm   0/1     Terminating   0          3m
+  > guestbook-v2-7fc76dc46-dcjwg   1/1     Running       0          28m
+  > guestbook-v2-7fc76dc46-f7tzx   1/1     Running       0          28m
+  > guestbook-v2-7fc76dc46-k7nnq   0/1     Terminating   0          3m
+  > guestbook-v2-7fc76dc46-zgckk   1/1     Running       0          28m
   > 
   > 少しだけ間を置いてから再度実行します。
   > 
   > $ kubectl get pods -l app=guestbook
   > NAME                           READY   STATUS    RESTARTS   AGE
-  > guestbook-v1-7fc76dc46-dcjwg   1/1     Running   0          29m
-  > guestbook-v1-7fc76dc46-f7tzx   1/1     Running   0          29m
-  > guestbook-v1-7fc76dc46-zgckk   1/1     Running   0          29m
+  > guestbook-v2-7fc76dc46-dcjwg   1/1     Running   0          29m
+  > guestbook-v2-7fc76dc46-f7tzx   1/1     Running   0          29m
+  > guestbook-v2-7fc76dc46-zgckk   1/1     Running   0          29m
   > ```
   > 上記の例のようにレプリカ数3の状態になったことが確認できるはずです。
 
 
 ### 次に，guestbokアプリケーションのserviceの構成を見てみましょう。
 
-7. **guestbook/v1/guestbook-service.yaml**  を任意のエディタで開きます。  
+7. **guestbook/v2/guestbook-service.yaml**  を任意のエディタで開きます。  
 
   ```yaml
   apiVersion: v1
@@ -204,7 +208,7 @@ $ cd guestbook/v1
 
 > さらに上記では`type: NodePort`とすることで外部からアクセスが可能になるよう設定しています。
 
-8. `guestbook-v1`deploymentを作成した時と同じコマンドを使って，`guestbook-service`serviceを作成しましょう。
+8. `guestbook-v2`deploymentを作成した時と同じコマンドを使って，`guestbook-service`serviceを作成しましょう。
 
   実行例:
 
@@ -241,7 +245,7 @@ $ cd guestbook/v1
     
     ![guestbook-v1-lab3 application in browser](images/guestbook-in-browser-v1-lab3.png)
 
-以上の操作で，マニフェストファイル(yaml)で`deployment(guestbook-v1)`と`service(guestbook)`をKubernetes上に展開し，さらに外部からアクセス可能なguestbookアプリケーションを動作させることができました。またyamlを編集することで，Kubernetesが`desired state (宣言的に指定した状態)`を維持させるように動作することを確認できました。
+以上の操作で，マニフェストファイル(yaml)で`deployment(guestbook-v2)`と`service(guestbook)`をKubernetes上に展開し，さらに外部からアクセス可能なguestbookアプリケーションを動作させることができました。またyamlを編集することで，Kubernetesが`desired state (宣言的に指定した状態)`を維持させるように動作することを確認できました。
 
 > 補足:  
 > Kubernetesが`desired state`を維持するように動作していることを別の角度から確認することもできます。
@@ -261,9 +265,9 @@ $ cd guestbook/v1
 > ```bash
 > $ kubectl get pods -l app=guestbook
 > NAME                           READY   STATUS    RESTARTS   AGE
-> guestbook-v1-7fc76dc46-mdzbk   1/1     Running   0          5s
-> guestbook-v1-7fc76dc46-f7tzx   1/1     Running   0          31m
-> guestbook-v1-7fc76dc46-zgckk   1/1     Running   0          31m
+> guestbook-v2-7fc76dc46-mdzbk   1/1     Running   0          5s
+> guestbook-v2-7fc76dc46-f7tzx   1/1     Running   0          31m
+> guestbook-v2-7fc76dc46-zgckk   1/1     Running   0          31m
 > ```
 >
 > `AGE`が他の2つに比べて新しいPodが表示されるはずです。これは，Podの削除後，新たに作られたものです。
@@ -298,7 +302,7 @@ $ cd guestbook/v1
 
   ```yaml
   apiVersion: apps/v1
-    kind: Deployment
+  kind: Deployment
   metadata:
     name: redis-master
     labels:
@@ -405,7 +409,7 @@ $ cd guestbook/v1
 
   ```bash
   $ kubectl delete deployment guestbook-v1
-  deployment.extensions "guestbook-v1" deleted
+  deployment.extensions "guestbook-v2" deleted
   
   $ kubectl create -f guestbook-deployment.yaml
   deployment.apps/guestbook-v1 created
@@ -625,11 +629,11 @@ $ cd guestbook/v1
   実行例:
 
   ```bash
-  $ kubectl delete deploy guestbook-v1
-  deployment.extensions "guestbook-v1" deleted
+  $ kubectl delete deploy guestbook-v2
+  deployment.extensions "guestbook-v2" deleted
   
   $ kubectl create -f guestbook-deployment.yaml
-  deployment.apps/guestbook-v1 created
+  deployment.apps/guestbook-v2 created
   ```
 
 17. ブラウザ上で以下のURLからgurstbookアプリの動作をテストします。
