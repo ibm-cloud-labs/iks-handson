@@ -27,3 +27,7 @@ Lab1-3では，Kubernetesの基礎を学びます。
 具体的には，Kubernetesの泥臭い作業(kubectl run xxx)やマニュフェストファイル(yamlファイル)を使用した宣言的な定義などを経験します。  
 
 Lab4以降では，Kubernetesのパッケージング技術の1つである **Helm** を使用した一括デプロイや，PaaSサービスの1つである IBM Cloudの画像認識サービス(Visual Recognition)と連携させるなど応用編を体験します。
+
+
+# 追加学習コンテンツ
+[Lab X](LabX): まだまだあるよ。Kubernetesの追加学習コンテンツの一覧
