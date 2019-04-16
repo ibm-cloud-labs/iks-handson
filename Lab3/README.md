@@ -220,7 +220,7 @@ $ cd guestbook/v1
     >補足:  
     > ワーカーノードの `Public IP` は以下のように確認します。
     > ```
-    > $ ibmcloud cs workers mycluster
+    > $ ibmcloud ks workers mycluster
     > OK
     > ID                                                 Public IP       Private IP      Machine Type   State    Status   Zone    Version
     > kube-hou02-pa705552a5a95d4bf3988c678b438ea9ec-w1   184.173.52.92   10.76.217.175   free           normal   Ready    hou02   1.10.12_1543
@@ -419,7 +419,7 @@ $ cd guestbook/v1
   > これまでのハンズオンと同様に以下の手順で `Public IP`と`NodePort`の情報を取得できます。
   > ワーカーノードの `Public IP` は以下のように確認します。
   > ```
-  > $ ibmcloud cs workers mycluster
+  > $ ibmcloud ks workers mycluster
   > OK
   > ID                                                 Public IP       Private IP      Machine Type   State    Status   Zone    Version
   > kube-hou02-pa705552a5a95d4bf3988c678b438ea9ec-w1   184.173.52.92   10.76.217.175   free           normal   Ready    hou02   1.10.12_1543

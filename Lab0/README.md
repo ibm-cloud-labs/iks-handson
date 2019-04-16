@@ -15,7 +15,7 @@ K8sクラスターは[IKS(IBM Cloud Kubernetes Service)](https://www.ibm.com/clo
 2. K8sクラスターの作成 **(※セミナー会場にて実施済のため操作は不要です)**
 
     [IBM Cloud](https://cloud.ibm.com/containers-kubernetes/catalog/cluster/create)でクラスターを作成します。  
-    ibmcloudコマンドで作成する場合は， `$ ibmcloud cs cluster-create --name <name-of-cluster>` コマンドを実行します。
+    ibmcloudコマンドで作成する場合は， `$ ibmcloud ks cluster-create --name <name-of-cluster>` コマンドを実行します。
 
 3. CLI で IBM Cloudにログイン
 
@@ -74,7 +74,7 @@ K8sクラスターは[IKS(IBM Cloud Kubernetes Service)](https://www.ibm.com/clo
     実行例:
     
     ```bash.sh
-    $ ibmcloud cs region-set us-south
+    $ ibmcloud ks region-set us-south
     ```
     
     >補足:  
@@ -82,13 +82,13 @@ K8sクラスターは[IKS(IBM Cloud Kubernetes Service)](https://www.ibm.com/clo
 
 5. 接続情報の取得
    
-    `$ ibmcloud cs cluster-config <name-of-cluster>` を実行し，K8sクラスターへの接続情報を取得して，コピーします。
+    `$ ibmcloud ks cluster-config <name-of-cluster>` を実行し，K8sクラスターへの接続情報を取得して，コピーします。
     (この後の手順でペーストします)
 
     実行例:
 
     ```bash.sh
-    $ ibmcloud cs cluster-config mycluster
+    $ ibmcloud ks cluster-config mycluster
     OK
     The configuration for mycluster was downloaded successfully.
 
