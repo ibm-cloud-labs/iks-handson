@@ -6,13 +6,13 @@ IKSハンズオンに必要なKubernetesクラスタの作成と、ローカル�
 
 > 事前に実施済みの方はスキップして、 **1. IBM CLIログイン** に進んでください。
 
-ガイドに従い実行ください。　https://ibm.box.com/v/iks-workshop
+ガイドに従い実行ください。　https://github.com/cloud-handson/iks-handson-setup/blob/master/README.md
 
 
 ## 1. IBM CLIを使ってログイン
 ibmcloud cli を使ってIBM Cloudにログインします
 
-> Windowsユーザーの方はコマンドプロンプトを利用してください。
+> Windowsユーザーの方は**コマンドプロンプト**を利用してください。
 
 ```
 $ ibmcloud login
