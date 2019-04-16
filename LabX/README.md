@@ -1,6 +1,16 @@
 # LabX 
 まだまだあるよ! Kubernetesの追加学習コンテンツの一覧
 
+## 公式資格
+
+* Expert Certification - Cloud Native Computing Foundation
+
+  https://www.cncf.io/certification/cka/
+
+* Kubernetes Application Developer (CKAD) - Cloud Native Computing Foundation
+
+  https://www.cncf.io/certification/ckad/
+
 ## IBM Cloud Docs
   IBM Cloud のドキュメント。機能紹介、API紹介、チュートリアルをご提供
 
