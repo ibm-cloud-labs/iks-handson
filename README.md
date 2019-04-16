@@ -30,4 +30,4 @@ Lab4以降では，Kubernetesのパッケージング技術の1つである **He
 
 
 # 追加学習コンテンツ
-[Lab X](LabX): まだまだあるよ。Kubernetesの追加学習コンテンツの一覧
+[Lab X](LabX): まだまだあるよ。Kubernetesの追加学習コンテンツの一覧
