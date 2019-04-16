@@ -98,9 +98,9 @@ $ cd guestbook/v2
   ```bash
   $ kubectl get pods -l app=guestbook
   NAME                           READY   STATUS    RESTARTS   AGE
-  guestbook-v1-7fc76dc46-dcjwg   1/1     Running   0          18m
-  guestbook-v1-7fc76dc46-f7tzx   1/1     Running   0          18m
-  guestbook-v1-7fc76dc46-zgckk   1/1     Running   0          18m
+  guestbook-v2-7fc76dc46-dcjwg   1/1     Running   0          18m
+  guestbook-v2-7fc76dc46-f7tzx   1/1     Running   0          18m
+  guestbook-v2-7fc76dc46-zgckk   1/1     Running   0          18m
   ```
 
   >補足1:
