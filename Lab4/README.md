@@ -92,7 +92,12 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
     実行例:
     
     ```bash
+    Kubernetesクラスタに tiller をインストール
     $ kubectl apply -f https://raw.githubusercontent.com/IBM-Cloud/kube-samples/master/rbac/serviceaccount-tiller.yaml
+    serviceaccount/tiller created
+    clusterrolebinding.rbac.authorization.k8s.io/tiller created
+    
+    Helmの初期化
     $ helm init --service-account tiller
     $HELM_HOME has been configured at /Users/XXXXX/.helm.    
 
