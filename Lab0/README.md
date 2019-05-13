@@ -15,7 +15,7 @@ ibmcloud cli を使ってIBM Cloudにログインします
 > Windowsユーザーの方は**コマンドプロンプト**を利用してください。
 
 ```
-$ ibmcloud login
+$ ibmcloud login -a https://cloud.ibm.com
 ```
 
 > output
