@@ -87,12 +87,18 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
     $ ibmcloud ks cluster-get mycluster
     ```
 
-4. Helmの初期化を行います。
+4. Kubernetesクラスタに、tiller をインストールし、Helmの初期化を行います。
 
     実行例:
     
     ```bash
-    $ helm init
+    Kubernetesクラスタに tiller をインストール
+    $ kubectl apply -f https://raw.githubusercontent.com/IBM-Cloud/kube-samples/master/rbac/serviceaccount-tiller.yaml
+    serviceaccount/tiller created
+    clusterrolebinding.rbac.authorization.k8s.io/tiller created
+    
+    Helmの初期化
+    $ helm init --service-account tiller
     $HELM_HOME has been configured at /Users/XXXXX/.helm.    
 
     Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.
