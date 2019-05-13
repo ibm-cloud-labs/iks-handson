@@ -506,13 +506,20 @@ $ cd guestbook/v1
       spec:
         containers:
         - name: redis-slave
-          image: kubernetes/redis-slave:v2
+          image: ibmcloudlabs/redis-slave:v3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          env:
+          - name: GET_HOSTS_FROM
+            value: dns
           ports:
           - name: redis-server
             containerPort: 6379
   ```
 
-  コンテナイメージとして`image: kubernetes/redis-slave:v2`を指定し，
+  コンテナイメージとして`image: ibmcloudlabs/redis-slave:v3`を指定し，
   `spec.replicas: 2`の部分で，2つのレプリカを生成するように構成されていることが分かります。
 
 11. Redis Slaveデータベースのdeploymentを作成します。
