@@ -26,7 +26,7 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
     実行例:
     
     ```bash
-    $ git clone https://github.com/ibm-cloud-labs/jpetstore-kubernetes-compact.git
+    $ git clone https://github.com/ibm-cloud-labs/jpetstore-kubernetes-compact.git --depth 1
     ```
         
 2. Helmチャートの中身を確認します。
