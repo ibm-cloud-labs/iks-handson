@@ -55,7 +55,7 @@
   実行例:
 
   ```bash
-  jpetstore-kubernetes-min/mmssearcｈ ディレクトリで操作します。
+  jpetstore-kubernetes-compact/mmssearcｈ ディレクトリで操作します。
   $ cp mms-secrets.json.template mms-secrets.json
   ```
 
@@ -81,7 +81,7 @@
   実行例: 
 
   ```bash
-  jpetstore-kubernetes-min/mmssearchで操作します。
+  jpetstore-kubernetes-compact/mmssearchで操作します。
   $ kubectl create secret generic mms-secret --from-file=mms-secrets=./mms-secrets.json
   secret/mms-secret created
   ```
@@ -130,12 +130,12 @@
 
   `helm install`コマンドを使用します。
   
-  MMSSearchのDeployment/Serviceなどを作成するHelmチャートは，`jpetstore-kubernetes-min/helm`ディレクトリに準備しています。
+  MMSSearchのDeployment/Serviceなどを作成するHelmチャートは，`jpetstore-kubernetes-compact/helm`ディレクトリに準備しています。
   
   実行例:
   
   ```bash
-  helmディレクトリー移動 (jpetstore-kubernetes-min/helm)
+  helmディレクトリー移動 (jpetstore-kubernetes-compact/helm)
   $ cd helm
 
   MMSSearchアプリのデプロイ
@@ -184,7 +184,7 @@
   > yamlファイルを使用してデプロイする場合は以下のようになります。(**今回は実施しません**)
   > 
   > ```bash
-  > #jpetstore-kubernetes-min/jpetstore ディレクトリに移動
+  > #jpetstore-kubernetes-compact/jpetstore ディレクトリに移動
   > $ cd jpetstore
   > $ kubectl apply -f jpetstore-watson.yaml
   > service "mmssearch" created
@@ -224,7 +224,7 @@
 
     ブラウザで`<クラスターのPublic IP>:<ポート>`にアクセスしてください。
     
-    `jpetstore-kubernetes-min/pet-images`ディレクトリにある動物の画像をアップロードすると，Watson Visual Recognitionによる画像認識が行われ，認識した結果（動物の種類）が`JpetStore`データベースに登録されている動物かどうかが返ってきます。
+    `jpetstore-kubernetes-compact/pet-images`ディレクトリにある動物の画像をアップロードすると，Watson Visual Recognitionによる画像認識が行われ，認識した結果（動物の種類）が`JpetStore`データベースに登録されている動物かどうかが返ってきます。
 
    ![](images/webchat.png)
 
