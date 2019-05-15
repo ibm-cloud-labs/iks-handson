@@ -39,7 +39,7 @@ Helmの公式サイトにチャート開発のためのドキュメントがま�
 Go Template言語で環境により異なる値が記載されています
 
    ```bash
-   $ cat templates/deployment.yaml 
+   $ cat mychart/templates/deployment.yaml 
    apiVersion: apps/v1beta2
    kind: Deployment
    metadata:
@@ -71,7 +71,7 @@ Go Template言語で環境により異なる値が記載されています
 以下の設定の場合、例えばvalues.yamlにあるreplicaCountという設定項目が上記のdeployment.ymlのレプリカ数を指定する項目(spec.replicas)に反映されます。
 
    ```
-   $ cat values.yaml 
+   $ cat mychart/values.yaml 
    # Default values for mychart.
    # This is a YAML-formatted file.
    # Declare variables to be passed into your templates.
@@ -275,7 +275,7 @@ templates/service.yamlの17行目から３行追加します。
 続いて、チャートのtemplatesディレクトリにindex-configmap.yamlを作成します。21行目がWebブラウザで確認できるメッセージの部分です。
 
    ```bash
-   以下mychart/templates/index-configmap.yamlの内容
+   以下 mychart/templates/index-configmap.yamlの内容
    
    apiVersion: v1
    kind: ConfigMap
@@ -313,7 +313,7 @@ templates/service.yamlの17行目から３行追加します。
 さらに、チャートのtemplatesディレクトリにあるdeployment.yamlを編集します。
 
    ```bash
-   以下mychart/templates/deployment.yamlの内容
+   以下 mychart/templates/deployment.yamlの内容
    
    apiVersion: apps/v1beta2
    kind: Deployment
@@ -346,12 +346,6 @@ templates/service.yamlの17行目から３行追加します。
          - name: init-myservice
            image: busybox
            command: ['sh', '-c', 'cat /etc/config-template/index.html | sed "s/__NAME__/{{ .Values.app.name }}/" > /etc/config/index.html']
-           env:
-           - name: mypassword
-             valueFrom:
-               secretKeyRef:
-                 name: my-password
-                 key: password
            volumeMounts:
            - name: config-volume
              mountPath: /etc/config
