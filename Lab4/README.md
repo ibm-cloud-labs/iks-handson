@@ -26,38 +26,43 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
     実行例:
     
     ```bash
-    $ git clone https://github.com/capsmalt/jpetstore-kubernetes-min.git
+    $ git clone https://github.com/ibm-cloud-labs/jpetstore-kubernetes-compact.git --depth 1
     ```
         
 2. Helmチャートの中身を確認します。
 
-    `JpetStore`アプリケーションをデプロイするためのHelmチャートは`jpetstore-kubernetes-min/helm/modernpets`ディレクトリに入っています。
+    `JpetStore`アプリケーションをデプロイするためのHelmチャートは`jpetstore-kubernetes-compact/helm/modernpets`ディレクトリに入っています。
     
 
     実行例:
     
     ```bash
-    $ cd jpetstore-kubernetes-min/helm
-    $ ls
-    mmssearch	modernpets
-    $ cd modernpets
-    $ ls 
-    Chart.yaml	templates	values.yaml
-    ```
-
-    ```bash
-    modernpetsフォルダの中身を確認
-    $ tree
+    $ cd jpetstore-kubernetes-compact/helm
+    $ tree .
     .
-    ├── Chart.yaml
-    ├── templates
-    │   ├── NOTES.txt
-    │   ├── _helpers.tpl
-    │   ├── deployment.yaml
-    │   └── service.yaml
-    └── values.yaml
+    ├── mmssearch
+    │   ├── Chart.yaml
+    │   ├── README.md
+    │   ├── ics-values.yaml
+    │   ├── templates
+    │   │   ├── NOTES.txt
+    │   │   ├── _helpers.tpl
+    │   │   ├── deployment.yaml
+    │   │   ├── ingress.yaml
+    │   │   └── service.yaml
+    │   ├── values-icp.yaml
+    │   └── values.yaml
+    └── modernpets
+        ├── Chart.yaml
+        ├── templates
+        │   ├── NOTES.txt
+        │   ├── _helpers.tpl
+        │   ├── deployment.yaml
+        │   └── service.yaml
+        ├── values-icp.yaml
+        └── values.yaml
 
-    1 directory, 6 files
+    4 directories, 17 files
     ```
 
     上記出力結果に含まれるファイルを使用することで，
@@ -114,7 +119,7 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
     実行例:
     
     ```bash
-    jpetstore-kubernetes-min/helmディレクトリで操作します。
+    jpetstore-kubernetes-compact/helmディレクトリで操作します。
     $ cd ../helm
     $ helm install --name jpetstore ./modernpets/
     
@@ -209,12 +214,12 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
 
 ## 参考1: YAMLファイルを使用したデプロイ (今回は実施しません。)
 
-  JpetStoreアプリのyamlファイルは， `jpetstore-kubernetes-min/jpetstore` ディレクトリ配下にあります。
+  JpetStoreアプリのyamlファイルは， `jpetstore-kubernetes-compact/jpetstore` ディレクトリ配下にあります。
 
     実行例: 
 
     ```bash
-    jpetstore-kubernetes-min/jpetstore ディレクトリで操作します。
+    jpetstore-kubernetes-helm/jpetstore ディレクトリで操作します。
     $ kubectl apply -f jpetstore.yaml
     deployment.extensions "jpetstoreweb" created
     service "web" created
@@ -230,8 +235,8 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
 1. ソースコードを入手します。
 
     ```bash
-    $ git clone https://github.com/capsmalt/jpetstore-kubernetes-all.git
-    $ cd jpetstore-kubernetes-all
+    $ git clone https://github.com/ibm-cloud-labs/jpetstore-kubernetes-allinone.git
+    $ cd jpetstore-kubernetes
     ```
 
     > 補足:  
@@ -240,10 +245,10 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
     > 
     > | フォルダー | 説明 |
     > | ---- | ----------- |
-    > |[**jpetstore**](https://github.com/kissyyy/jpetstore-kubernetes/tree/master/jpetstore)| Javaでかかれたペットショップのアプリケーション |
-    > |[**mmssearch**](https://github.com/kissyyy/jpetstore-kubernetes/tree/master/mmssearch)| GOで実装された画像認識機能付きチャットアプリ |
-    > |[**helm**](https://github.com/kissyyy/jpetstore-kubernetes/tree/master/helm)| KubernetesにデプロイするためのHelm チャート |
-    > |[**pet-images**](https://github.com/kissyyy/jpetstore-kubernetes/tree/master/pet-images)| チャットアプリの動作確認用の動物画像ファイル |
+    > |[**jpetstore**](https://github.com/ibm-cloud-labs/jpetstore-kubernetes-allinone/tree/master/jpetstore)| Javaでかかれたペットショップのアプリケーション |
+    > |[**mmssearch**](https://github.com/ibm-cloud-labs/jpetstore-kubernetes-allinone/tree/master/mmssearch)| GOで実装された画像認識機能付きチャットアプリ |
+    > |[**helm**](https://github.com/ibm-cloud-labs/jpetstore-kubernetes-allinone/tree/master/helm)| KubernetesにデプロイするためのHelm チャート |
+    > |[**pet-images**](https://github.com/ibm-cloud-labs/jpetstore-kubernetes-allinone/tree/master/pet-images)| チャットアプリの動作確認用の動物画像ファイル |
 
 
 ここでは，ビルドしたコンテナイメージの置き場としてIBM Cloud Container Registryを使用します。  
@@ -266,17 +271,17 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
 3. **Container Registry** (e.g. registry.ng.bluemix.net) の情報を確認します。
 
     ```bash
-    Container Registry                      registry.ng.bluemix.net
-    Container Registry API エンドポイント   https://registry.ng.bluemix.net/api
-    IBM Cloud API エンドポイント            https://cloud.ibm.com
-    IBM Cloud アカウントの詳細              XXXX Account (xxxxxxxxxxxxxxxxxxxxx)
-    IBM Cloud 組織の詳細                     ()
+    Container Registry                us.icr.io
+    Container Registry API endpoint   https://us.icr.io/api
+    IBM Cloud API endpoint            https://cloud.ibm.com
+    IBM Cloud account details         Hoge Fuga Account (xxxxxxxxxxxxxxxxx)
+    IBM Cloud organization details     ()
     ```
 
 4. **jpetstoreweb** イメージをビルドし，レジストリーにプッシュします。 
 
     ```bash
-    jpetstore-kubernetes-all/jpetstoreディレクトリで操作します。
+    jpetstore-kubernetes-allinone/jpetstoreディレクトリで操作します。
     $ cd jpetstore
     $ docker build . -t <MYREGISTRY>/<MYNAMESPACE>/jpetstoreweb
     $ docker push <MYREGISTRY>/<MYNAMESPACE>/jpetstoreweb
@@ -288,7 +293,7 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
 5. 同様に， **jpetstoredb** イメージをビルドします。
 
     ```bash
-    jpetstore-kubernetes-all/jpetstore/dbディレクトリで操作します。
+    jpetstore-kubernetes-allinone/jpetstore/dbディレクトリで操作します。
     $ cd db
     $ docker build . -t <MYREGISTRY>/<MYNAMESPACE>/jpetstoredb
     $ docker push <MYREGISTRY>/<MYNAMESPACE>/jpetstoredb
@@ -297,5 +302,5 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
 6. レジストリーへのプッシュが完了したことを確認するために、IBM Cloud Container Registryに保存されたイメージの一覧を表示します。 
 
     ```bash
-    $ ibmcloud cr images --restrict $MYNAMESPACE
+    $ ibmcloud cr images
     ```
