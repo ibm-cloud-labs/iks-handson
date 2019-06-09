@@ -180,7 +180,7 @@ $ cd guestbook/v1
   > 上記の例のようにレプリカ数3の状態になったことが確認できるはずです。
 
 
-### 次に，guestbokアプリケーションのserviceの構成を見てみましょう。
+### 次に，guestbookアプリケーションのserviceの構成を見てみましょう。
 
 7. **guestbook/v1/guestbook-service.yaml**  を任意のエディタで開きます。  
 
@@ -506,7 +506,7 @@ $ cd guestbook/v1
       spec:
         containers:
         - name: redis-slave
-          image: ibmcloudlabs/redis-slave:v3
+          image: ibmcloudlabs/redis-slave:v2
           resources:
             requests:
               cpu: 100m
@@ -519,7 +519,7 @@ $ cd guestbook/v1
             containerPort: 6379
   ```
 
-  コンテナイメージとして`image: ibmcloudlabs/redis-slave:v3`を指定し，
+  コンテナイメージとして`image: ibmcloudlabs/redis-slave:v2`を指定し，
   `spec.replicas: 2`の部分で，2つのレプリカを生成するように構成されていることが分かります。
 
 11. Redis Slaveデータベースのdeploymentを作成します。
