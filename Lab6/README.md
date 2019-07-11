@@ -10,6 +10,14 @@ Helmの公式サイトにチャート開発のためのドキュメントがま�
 - https://docs.helm.sh/chart_template_guide/
 - https://docs.helm.sh/chart_best_practices/
 
+## Helmのバージョン確認
+このガイドはv2.14ベースで記載しています。v3を利用されている場合やv2.14よりも古いバージョンを利用されている場合はバージョンを変更してください
+
+  ```bash
+  $ helm version --client
+  Client: &version.Version{SemVer:"v2.14.0", GitCommit:"05811b84a3f93603dd6c2fcfe57944dfa7ab7fd0", GitTreeState:"clean"}
+  ```
+
 ## チャートの作成
 チャートの雛形を作成してみます。任意の作業ディレクトリで以下のコマンドを実行してください。
 
@@ -79,18 +87,18 @@ Go Template言語で環境により異なる値が記載されています
   # Default values for mychart.
   # This is a YAML-formatted file.
   # Declare variables to be passed into your templates.
-
+  
   replicaCount: 1
-
+  
   image:
     repository: nginx
     tag: stable
     pullPolicy: IfNotPresent
-
+  
   imagePullSecrets: []
   nameOverride: ""
   fullnameOverride: ""
-
+  
   service:
     type: ClusterIP
     port: 80
@@ -157,7 +165,8 @@ Go Template言語で環境により異なる値が記載されています
 
 ## 設定を変更する
 では、次にIKSのフリークラスターに合わせ、KubernetesのNodePortで公開できるように、テンプレートを修正してみましょう。
-templates/service.yamlの17行目から３行追加します。
+templates/service.yamlのspec.ports以下のnameの後に同じインデントで設定を３行追加しましょう。
+設定している内容はservice.typeがNodePortだった場合にNodePortのPortを指定ように記載しています
 
   ```bash
   $ cat mychart/templates/service.yaml 
@@ -174,21 +183,14 @@ templates/service.yamlの17行目から３行追加します。
         targetPort: http
         protocol: TCP
         name: http
-        {{- if .Values.service.nodePort }}
-        nodePort: {{ .Values.service.nodePort }}
-        {{- end}}
+        {{- if .Values.service.nodePort }}          # 追加行
+        nodePort: {{ .Values.service.nodePort }}    # 追加行
+        {{- end}}                                   # 追加行
     selector:
       app.kubernetes.io/name: {{ include "mychart.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   ```
-追加する行は以下の設定です。
-
-  ```bash
-        {{- if .Values.service.nodePort }}
-        nodePort: {{ .Values.service.nodePort }}
-        {{- end}}
-  ```
-
+  
 変更したらテンプレートの記載が正しいかのチェックを行います。「helm lint <helmチャートのディレクトリ>」を実行します。
 
   ```bash
