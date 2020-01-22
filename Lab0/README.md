@@ -21,14 +21,14 @@ $ ibmcloud login -a https://cloud.ibm.com
 > output
 ```
 ibmcloud loginAPI endpoint: https://cloud.ibm.com
-Email> hoge@fuga.com                   < メールアドレスを入力
-Password>                              < パスワードを入力
+Email> hoge@fuga.com        < メールアドレスを入力
+Password>                   < パスワードを入力
 Authenticating...OK
 
 
 Select an account:
 1. KOTA SATO's Account (xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
-Enter a number> 1               < 複数のアカウントに結び付けられている場合は利用するアカウントを選択
+Enter a number> 1           < 複数のアカウントに結び付けられている場合は利用するアカウントを選択
 
 
 Targeted account KOTA SATO's Account (xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
@@ -38,11 +38,12 @@ Targeted resource group default
 Select a region (or press enter to skip):
 1. au-syd
 2. jp-tok
-3. eu-de
-4. eu-gb
-5. us-south
-6. us-east
-Enter a number> 5            < us-southを選択
+3. kr-seo
+4. eu-de
+5. eu-gb
+6. us-south
+7. us-east
+Enter a number> 6          < us-southの番号を選択。
 Targeted region us-south
 
 
