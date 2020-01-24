@@ -13,9 +13,41 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
 
 また，Helmチャートも事前に用意しています。Helmチャートを取得した後に，`helm install xxx`することでアプリケーションをデプロイできます。
 
->補足:  
 > ご自身でコンテナイメージのビルドから実施したい場合は，末尾のセクション `## 参考2: 自身でイメージビルドする方法` をご覧ください。
-> 
+
+
+## 事前準備
+
+helmのバージョン確認とレリポジトリの登録・更新
+
+* helm のバージョン確認
+
+    `helm version`コマンドでインストールされているhelmのバージョンが**v3.0.2以上**で有ることを確認します
+
+    実行例:
+    ```bash
+    $ helm version
+    version.BuildInfo{Version:"v3.0.2", GitCommit:"19e47ee3283ae98139d98460de796c1be1e3975f", GitTreeState:"clean", GoVersion:"go1.13.5"}
+    ```
+
+    > helm v2にて必要だったTillerが、helm v3では必要なくなり、Client-only architectureとなりました。
+    > https://developer.ibm.com/blogs/kubernetes-helm-3/
+
+
+* helmリポジトリの登録と更新
+
+    helm 公式リポジトリの登録と情報更新を行います。
+    > 今回は利用しませんが、行っておくと便利です
+
+    実行例:
+    ```bash
+    $ helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+    $ helm repo update
+    Hang tight while we grab the latest from your chart repositories...
+    ...Successfully got an update from the "stable" chart repository
+    Update Complete. ⎈ Happy Helming!⎈
+    ```
+    
 
 ## Helmチャートを使用して `JpetStore`アプリケーションをデプロイする
 
@@ -74,45 +106,7 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
     > 興味のある方は，[Lab6](../Lab6/)を参照ください。
     > 
 
-3. Helmコマンドを使うための事前準備を行います。
-
-    K8sクラスター上のHelmサーバー(Tillerというコンポーネント)へ接続できるように構成する必要があります。
-    
-    以下の手順で`IKS接続のための事前準備`を実施してください。
-    
-    実行例: 
-    
-    ```bash
-    $ ibmcloud login
-    $ ibmcloud ks cluster-config mycluster
-    出力結果の`export xxx`をターミナル上でペーストする
-    $ export xxxx
-    $ kubectl get nodes
-    XXXXXXX 正常に実行できることが確認できればOK
-    $ ibmcloud ks cluster-get mycluster
-    ```
-
-4. Kubernetesクラスタに、tiller をインストールし、Helmの初期化を行います。
-
-    実行例:
-    
-    ```bash
-    Kubernetesクラスタに tiller をインストール
-    $ kubectl apply -f https://raw.githubusercontent.com/IBM-Cloud/kube-samples/master/rbac/serviceaccount-tiller.yaml
-    serviceaccount/tiller created
-    clusterrolebinding.rbac.authorization.k8s.io/tiller created
-    
-    Helmの初期化
-    $ helm init --service-account tiller
-    $HELM_HOME has been configured at /Users/XXXXX/.helm.    
-
-    Tiller (the Helm server-side component) has been installed into your Kubernetes Cluster.
-    Happy Helming!
-    ```
-    
-    Warningが出る場合がありますが，ここでは **"Happy Helming!"** が確認できればOKです。
-    
-5. JpetStoreアプリケーションをデプロイします。
+3. JpetStoreアプリケーションをデプロイします。
 
     `helm install xxx`コマンドでHelmチャートを使用すると，JpetStoreアプリの`Webコンテナ`と`DBコンテナ`がデプロイされます。
     
@@ -121,7 +115,7 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
     ```bash
     jpetstore-kubernetes-compact/helmディレクトリで操作します。
     $ cd ../helm
-    $ helm install --name jpetstore ./modernpets/
+    $ helm install jpetstore ./modernpets/
     
     デプロイされたPodを確認します。
     $ kubectl get pods
@@ -136,7 +130,7 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
     >補足:  
     > 自分のコンテナイメージを使用する場合は，`helm/modernpets/values.yaml`の`repository`部分を `<MYREGISTRY>/<MYNAMESPACE>`に置き換えます。
     
-6. DeploymentやServiceについても確認します。
+4. DeploymentやServiceについても確認します。
     
     実行例:
 
@@ -172,7 +166,7 @@ Helm チャートと呼ばれる定義ファイルを使用すると，アプリ
 
     このようにHelmチャートを使うことで、一括デプロイやロールバックなどの管理がやりやすくなります。
     
-7. ブラウザ上でアプリケーションの動作を確認します。
+5. ブラウザ上でアプリケーションの動作を確認します。
 
     ブラウザで`<Public IP>:<NodePort>`を開きます。
     
