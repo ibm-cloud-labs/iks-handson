@@ -117,6 +117,11 @@ helmのバージョン確認とレリポジトリの登録・更新
     $ cd ../helm
     $ helm install jpetstore ./modernpets/
     
+    デプロイできたか確認
+    $ helm list
+    NAME     	NAMESPACE	REVISION	UPDATED                             	STATUS  	CHART           	APP VERSION
+    jpetstore	default  	1       	2020-01-24 14:40:28.405356 +0900 JST	deployed	modernpets-0.1.5	1.0
+    
     デプロイされたPodを確認します。
     $ kubectl get pods
     NAME                                                 READY   STATUS    RESTARTS   AGE
