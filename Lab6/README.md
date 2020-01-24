@@ -55,26 +55,29 @@ Go Template言語で環境により異なる値が記載されています
   metadata:
     name: {{ include "mychart.fullname" . }}
     labels:
-  {{ include "mychart.labels" . | indent 4 }}
+      {{- include "mychart.labels" . | nindent 4 }}
   spec:
     replicas: {{ .Values.replicaCount }}
     selector:
       matchLabels:
-        app.kubernetes.io/name: {{ include "mychart.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "mychart.selectorLabels" . | nindent 6 }}
     template:
       metadata:
         labels:
-          app.kubernetes.io/name: {{ include "mychart.name" . }}
-          app.kubernetes.io/instance: {{ .Release.Name }}
+          {{- include "mychart.selectorLabels" . | nindent 8 }}
       spec:
       {{- with .Values.imagePullSecrets }}
         imagePullSecrets:
           {{- toYaml . | nindent 8 }}
       {{- end }}
+        serviceAccountName: {{ include "mychart.serviceAccountName" . }}
+        securityContext:
+          {{- toYaml .Values.podSecurityContext | nindent 8 }}
         containers:
           - name: {{ .Chart.Name }}
-            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            securityContext:
+              {{- toYaml .Values.securityContext | nindent 12 }}
+            image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
   :
   (以下省略)
   ```
@@ -87,18 +90,35 @@ Go Template言語で環境により異なる値が記載されています
   # Default values for mychart.
   # This is a YAML-formatted file.
   # Declare variables to be passed into your templates.
-  
+
   replicaCount: 1
-  
+
   image:
     repository: nginx
-    tag: stable
     pullPolicy: IfNotPresent
-  
+
   imagePullSecrets: []
   nameOverride: ""
   fullnameOverride: ""
-  
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name:
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
   service:
     type: ClusterIP
     port: 80
@@ -112,51 +132,37 @@ Go Template言語で環境により異なる値が記載されています
 以下のような結果が出力されることを確認します。
 
   ```bash
-  $ helm install --name sample ./mychart
-  NAME:   sample
-  LAST DEPLOYED: Wed May 22 19:36:51 2019
+  $ helm install sample ./mychart
+  NAME: sample
+  LAST DEPLOYED: Fri Jan 24 15:34:33 2020
   NAMESPACE: default
-  STATUS: DEPLOYED
-
-  RESOURCES:
-  ==> v1/Deployment
-  NAME            READY  UP-TO-DATE  AVAILABLE  AGE
-  sample-mychart  0/1    1           0          0s
-
-  ==> v1/Pod(related)
-  NAME                             READY  STATUS   RESTARTS  AGE
-  sample-mychart-5d8794cdb6-qjzsb  0/1    Pending  0         0s
-
-  ==> v1/Service
-  NAME            TYPE       CLUSTER-IP      EXTERNAL-IP  PORT(S)  AGE
-  sample-mychart  ClusterIP  172.21.106.142  <none>       80/TCP   0s
-
-
+  STATUS: deployed
+  REVISION: 1
   NOTES:
   1. Get the application URL by running these commands:
     export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=mychart,app.kubernetes.io/instance=sample" -o jsonpath="{.items[0].metadata.name}")
     echo "Visit http://127.0.0.1:8080 to use your application"
-    kubectl port-forward $POD_NAME 8080:80
+    kubectl --namespace default port-forward $POD_NAME 8080:80
   ```
 
 問題なくデプロイができたかは、以下のコマンドで確認します:
 
   ```bash
   $ helm ls
-  NAME  	REVISION	UPDATED                 	STATUS  	CHART        	APP VERSION	NAMESPACE
-  sample	1       	Wed May 22 19:36:51 2019	DEPLOYED	mychart-0.1.0	1.0        	default
+  NAME  	NAMESPACE	REVISION	UPDATED                             	STATUS  	CHART        	APP VERSION
+  sample	default  	1       	2020-01-24 15:34:33.499819 +0900 JST	deployed	mychart-0.1.0	1.16.0
   ```
 
   ```bash
   $ kubectl get pod
   NAME                              READY   STATUS    RESTARTS   AGE
-  sample-mychart-5d8794cdb6-qjzsb   1/1     Running   0          73s
+  sample-mychart-7f54479764-gwllt   1/1     Running   0          78s
   ```
 
 実際にアプリケーションにアクセスするために、「kubectl port-forward <Pod名> <任意のポート番号>:80」でポートフォワーディングします。
 
    ```bash
-   $ kubectl port-forward sample-mychart-5d8794cdb6-qjzsb 8080:80
+   $ kubectl port-forward sample-mychart-7f54479764-gwllt 8080:80
    Forwarding from 127.0.0.1:8080 -> 80
    Forwarding from [::1]:8080 -> 80
    ```
@@ -175,7 +181,7 @@ templates/service.yamlのspec.ports以下のnameの後に同じインデント�
   metadata:
     name: {{ include "mychart.fullname" . }}
     labels:
-  {{ include "mychart.labels" . | indent 4 }}
+      {{- include "mychart.labels" . | nindent 4 }}
   spec:
     type: {{ .Values.service.type }}
     ports:
@@ -187,18 +193,17 @@ templates/service.yamlのspec.ports以下のnameの後に同じインデント�
         nodePort: {{ .Values.service.nodePort }}    # 追加行
         {{- end}}                                   # 追加行
     selector:
-      app.kubernetes.io/name: {{ include "mychart.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "mychart.selectorLabels" . | nindent 4 }}
   ```
   
 変更したらテンプレートの記載が正しいかのチェックを行います。「helm lint <helmチャートのディレクトリ>」を実行します。
 
   ```bash
   $ helm lint ./mychart/
-  ==> Linting ./mychart/
+  ==> Linting ./mychart
   [INFO] Chart.yaml: icon is recommended
 
-  1 chart(s) linted, no failures
+  1 chart(s) linted, 0 chart(s) failed
   ```
    
 次に設定した値を変更していきましょう。
@@ -230,25 +235,12 @@ templates/service.yamlのspec.ports以下のnameの後に同じインデント�
 
   ```bash
   $ helm upgrade -f value-new.yaml sample ./mychart/
-  Release "sample" has been upgraded.
-  LAST DEPLOYED: Wed May 22 19:44:46 2019
+  Release "sample" has been upgraded. Happy Helming!
+  NAME: sample
+  LAST DEPLOYED: Fri Jan 24 15:50:09 2020
   NAMESPACE: default
-  STATUS: DEPLOYED
-
-  RESOURCES:
-  ==> v1/Deployment
-  NAME            READY  UP-TO-DATE  AVAILABLE  AGE
-  sample-mychart  1/1    1           1          7m55s
-
-  ==> v1/Pod(related)
-  NAME                             READY  STATUS   RESTARTS  AGE
-  sample-mychart-5d8794cdb6-qjzsb  1/1    Running  0         7m55s
-
-  ==> v1/Service
-  NAME            TYPE      CLUSTER-IP      EXTERNAL-IP  PORT(S)       AGE
-  sample-mychart  NodePort  172.21.106.142  <none>       80:30001/TCP  7m55s
-
-
+  STATUS: deployed
+  REVISION: 3
   NOTES:
   1. Get the application URL by running these commands:
     export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services sample-mychart)
@@ -333,23 +325,24 @@ templates/service.yamlのspec.ports以下のnameの後に同じインデント�
   metadata:
     name: {{ include "mychart.fullname" . }}
     labels:
-  {{ include "mychart.labels" . | indent 4 }}
+      {{- include "mychart.labels" . | nindent 4 }}
   spec:
     replicas: {{ .Values.replicaCount }}
     selector:
       matchLabels:
-        app.kubernetes.io/name: {{ include "mychart.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "mychart.selectorLabels" . | nindent 6 }}
     template:
       metadata:
         labels:
-          app.kubernetes.io/name: {{ include "mychart.name" . }}
-          app.kubernetes.io/instance: {{ .Release.Name }}
+          {{- include "mychart.selectorLabels" . | nindent 8 }}
       spec:
       {{- with .Values.imagePullSecrets }}
         imagePullSecrets:
           {{- toYaml . | nindent 8 }}
       {{- end }}
+        serviceAccountName: {{ include "mychart.serviceAccountName" . }}
+        securityContext:
+          {{- toYaml .Values.podSecurityContext | nindent 8 }}
         volumes:
         - name: index-config
           configMap:
@@ -369,7 +362,9 @@ templates/service.yamlのspec.ports以下のnameの後に同じインデント�
             subPath: index.html
         containers:
           - name: {{ .Chart.Name }}
-            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            securityContext:
+              {{- toYaml .Values.securityContext | nindent 12 }}
+            image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             volumeMounts:
             - name: config-volume
@@ -415,7 +410,7 @@ templates/service.yamlのspec.ports以下のnameの後に同じインデント�
 
 ```bash
 1) helmで作成したリリースを削除します
-$ helm delete sample --purge
+$ helm uninstall sample
 
 2) ハンズオンが終わったらクラスターを削除します
 $ ibmcloud ks cluster-rm <クラスター名>
