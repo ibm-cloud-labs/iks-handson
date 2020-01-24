@@ -139,7 +139,7 @@
   $ cd helm
 
   MMSSearchアプリのデプロイ
-  $ helm install --name mmssearch ./mmssearch
+  $ helm install mmssearch ./mmssearch/
   ```
 
   >補足1:  
@@ -234,8 +234,8 @@
 
   ```bash
   1) Lab4, 5でデプロイした2つのアプリを削除します。
-  $ helm delete jpetstore --purge
-  $ helm delete mmssearch --purge
+  $ helm uninstall jpetstore
+  $ helm uninstall mmssearch
   
   2) クラスターに保存されているSecretを削除します。
   $ kubectl delete secret mms-secret
