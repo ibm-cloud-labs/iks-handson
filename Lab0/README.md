@@ -58,13 +58,14 @@ Space:
 OK
 ```
 
-リソースグループの指定が求められた場合は次のコマンドを実行します。利用しているリソースグループ名は、[IBM Cloudダッシュボード](https://cloud.ibm.com/login)の[管理]→[アカウント]→[アカウント・リソース]から確認できます。
+リソースグループの指定が求められた場合は、次のコマンドを実行します。利用しているリソースグループ名は、[IBM Cloudダッシュボード](https://cloud.ibm.com/login)の[管理]→[アカウント]→[アカウント・リソース]から確認できます。
 ```
 ibmcloud target -g <リソースグループ名>
 ```
 
 ## 2. Kubernetesクラスタへの接続情報の取得
 ibmcloud cli にてIKSクラスタを操作できるように接続情報を取得します
+(最新バージョンCLIを利用している場合)2020年6月8日現在、IBM Cloud CLI Plugin (container-service/kubernetes-service)の最新バージョン1.0.8を利用している場合は、'ibmcloud ks cluster config --cluster mycluster' のコマンドを実行することで、1.および2.の手順と同じ操作内容を実行したことになります。
 
 1. 接続情報の取得
     `ibmcloud ks cluster-config <cluster-name>`コマンドを使って、クラスタへの接続情報を取得します
