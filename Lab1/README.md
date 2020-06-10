@@ -88,7 +88,7 @@ Lab1〜3ではWebサイトのゲストブック機能を提供するシンプル
 4. 現在 `guestbook` アプリケーションは，ご自身のK8sクラスター上で動作しており，インターネットに公開されている状態です。
    アクセスするために，ワーカーノードのパブリックIPアドレス(`Public IP`)を取得します。
    
-   2020年6月8日現在、IBM Cloud CLI Plugin (container-service/kubernetes-service)の最新バージョン1.0.8を利用している場合は、 `ibmcloud ks cluster workers --cluster mycluster` を実行してください。
+   2020年6月8日現在、IBM Cloud CLI Plugin (container-service/kubernetes-service)の最新バージョン1.0.xを利用している場合は、 `ibmcloud ks cluster workers --cluster mycluster` もしくは `ibmcloud ks worker ls --cluster mycluster` を実行してください。
    
    実行例:
 
