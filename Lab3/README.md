@@ -36,7 +36,8 @@ $ cd guestbook/v1
 
 ### まずは，`guestbook`アプリケーションの`deployment`の構成を見てみましょう。
 
-1. **guestbook/v1/guestbook-deployment.yaml**  を任意のエディタで開きます。  
+1. **guestbook/v1/guestbook-deployment.yaml**  を任意のエディタで開きます。 
+IBM Cloud Shellを使って操作している場合には `cat guestbook-deployment.yaml` を実行すると内容を表示することができます。
 
   ```yaml
   apiVersion: apps/v1
@@ -107,6 +108,7 @@ $ cd guestbook/v1
 4. マニフェストファイルを変更してPodをスケーリングさせてみましょう。
 
   **guestbook/v1/guestbook-deployment.yaml** を任意のエディタで開いて `spec.replicas` の値を `replicas: 5` に変更します。
+  IBM Cloud Shellを使って操作している場合には `vi guestbook-deployment.yaml` を実行することで内容を編集することができます。編集を開始する場合にはiを入力し[INSERT]モードにし、保存する場合は[Esc]キーを押し、:wq!を入力します。
 
   ```yaml
   ...
@@ -220,7 +222,7 @@ $ cd guestbook/v1
     >補足:  
     > ワーカーノードの `Public IP` は以下のように確認します。
     > ```
-    > $ ibmcloud ks workers mycluster
+    > $ ibmcloud ks worker ls --cluster mycluster
     > OK
     > ID                                                 Public IP       Private IP      Machine Type   State    Status   Zone    Version
     > kube-hou02-pa705552a5a95d4bf3988c678b438ea9ec-w1   184.173.52.92   10.76.217.175   free           normal   Ready    hou02   1.10.12_1543
@@ -419,7 +421,7 @@ $ cd guestbook/v1
   > これまでのハンズオンと同様に以下の手順で `Public IP`と`NodePort`の情報を取得できます。
   > ワーカーノードの `Public IP` は以下のように確認します。
   > ```
-  > $ ibmcloud ks workers mycluster
+  > $ ibmcloud ks worker ls --cluster mycluster
   > OK
   > ID                                                 Public IP       Private IP      Machine Type   State    Status   Zone    Version
   > kube-hou02-pa705552a5a95d4bf3988c678b438ea9ec-w1   184.173.52.92   10.76.217.175   free           normal   Ready    hou02   1.10.12_1543
