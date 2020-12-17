@@ -72,32 +72,25 @@ ibmcloud cli にてIKSクラスタを操作できるように接続情報を取�
     `ibmcloud ks cluster-config <cluster-name>`コマンドを使って、クラスタへの接続情報を取得します
 
     ```
-    $ ibmcloud ks cluster-config mycluster
+    $ ibmcloud ks cluster config --cluster <自分のクラスタID>
+    ```
+
+例）
+    ```
+    $ ibmcloud ks cluster config --cluster bvddfq0d0geutccup6ig
     ```
 
     > Output
     ```
     OK
-    The configuration for mycluster was downloaded successfully.
-
-    Export environment variables to start using Kubernetes.
-
-    export KUBECONFIG=/Users/hogehoga/.bluemix/plugins/container-service/clusters/mycluster/kube-config-tok02-mycluster.yml
+    The configuration for bvddfq0d0geutccup6ig was downloaded successfully.
+    
+    Added context for bvddfq0d0geutccup6ig to the current kubeconfig file.
+    You can now execute 'kubectl' commands against your cluster. For example, run 'kubectl get nodes'.
+    If you are accessing the cluster for the first time, 'kubectl' commands might fail for a few seconds while RBAC synchronizes.
     ```
 
-    **上記コマンドの出力結果から、export KUBECONFIG=/Users/********-mycluster.yml の行をコピーしてください**
-
-2. 環境変数の定義
-    上記コマンドの`KUBECONFIG`を環境変数に定義します。
-
-    > 実行例
-    > Windowsの場合は，exportではなく **set** を使用します
-    ```
-    $ export KUBECONFIG=/Users/hogehoga/.bluemix/plugins/container-service/clusters/mycluster/kube-config-tok02-mycluster.yml
-    ```
-
-
-3. 接続確認
+2. 接続確認
     IKSクラスタへの接続確認を行います
 
     ```
@@ -106,8 +99,8 @@ ibmcloud cli にてIKSクラスタを操作できるように接続情報を取�
 
     > Output
     ```
-    AME            STATUS   ROLES    AGE   VERSION
-    10.129.177.57   Ready    <none>   1d   v1.13.5+IKS
+    NAME          STATUS   ROLES    AGE   VERSION
+    10.131.74.2   Ready    <none>   32m   v1.18.12+IKS
     ```
 
 以上でKubernetesクラスター(IKS)の使用準備は完了です。  
