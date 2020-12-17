@@ -7,7 +7,7 @@ Lab1〜3ではWebサイトのゲストブック機能を提供するシンプル
 `guestbook` アプリケーションをK8sクラスターにデプロイします。  
 使用するアプリは`ibmcom/guestbook:v1` という名前で，ビルド済のDockerイメージがDockerHub上にアップロード済です。
 
-1. `guestbook`を実行します。
+1. `guestbook`を実行します。 ※将来的にkubectl runは使用されなくなるため、kubectl createを使うことが推奨されています。 `kubectl create deployment guestbook --image=ibmcom/guestbook:v1`
 
    実行例:
 
@@ -88,15 +88,13 @@ Lab1〜3ではWebサイトのゲストブック機能を提供するシンプル
 4. 現在 `guestbook` アプリケーションは，ご自身のK8sクラスター上で動作しており，インターネットに公開されている状態です。
    アクセスするために，ワーカーノードのパブリックIPアドレス(`Public IP`)を取得します。
    
-   2020年6月8日現在、IBM Cloud CLI Plugin (container-service/kubernetes-service)の最新バージョン1.0.xを利用している場合は、 `ibmcloud ks cluster workers --cluster mycluster` もしくは `ibmcloud ks worker ls --cluster mycluster` を実行してください。
-   
    実行例:
 
    ```bash
-   $ ibmcloud ks workers mycluster
+   $ ibmcloud ks worker ls --cluster mycluster
    OK
-   ID                                                 Public IP       Private IP      Machine Type   State    Status   Zone    Version
-   kube-hou02-pa705552a5a95d4bf3988c678b438ea9ec-w1   184.173.52.92   10.76.217.175   free           normal   Ready    hou02   1.10.12_1543
+   ID                                                 Public IP       Private IP      Flavor   State    Status   Zone    Version
+   kube-hou02-pa705552a5a95d4bf3988c678b438ea9ec-w1   184.173.52.92   10.76.217.175   free     normal   Ready    hou02   1.18.12_1535
    ```
    
    上記の例では，`<Public IP>` の値は `184.173.52.92` です。
