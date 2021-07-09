@@ -7,13 +7,12 @@ Lab1〜3ではWebサイトのゲストブック機能を提供するシンプル
 `guestbook` アプリケーションをK8sクラスターにデプロイします。  
 使用するアプリは`ibmcom/guestbook:v1` という名前で，ビルド済のDockerイメージがDockerHub上にアップロード済です。
 
-1. `guestbook`を実行します。 ※将来的にkubectl runは使用されなくなるため、kubectl createを使うことが推奨されています。 `kubectl create deployment guestbook --image=ibmcom/guestbook:v1`
+1. `guestbook`を実行します。 `kubectl create deployment guestbook --image=ibmcom/guestbook:v1`
 
    実行例:
 
    ```bash
-   $ kubectl run guestbook --image=ibmcom/guestbook:v1
-   kubectl run --generator=deployment/apps.v1beta1 is DEPRECATED and will be removed in a future version. Use kubectl create instead.
+   $ kubectl create deployment guestbook --image=ibmcom/guestbook:v1
    deployment.apps/guestbook created
    ```
    
@@ -28,7 +27,7 @@ Lab1〜3ではWebサイトのゲストブック機能を提供するシンプル
    > 
    > コマンド実行直後は，STATUS属性が `ContainerCreating` です。少し待つと実行中を示す`Running`に変わります。READY属性も `0/1`から`1/1`に変わっているはずです。
    >    
-   > runコマンドの実行によって`guestbook`コンテナが内包されている`Pod`が生成されました。ですが生成されたものは，`Pod`だけではなく， K8sでコンテナを上手く管理するための以下のコンポーネントが生成されています。
+   > createコマンドの実行によって`guestbook`コンテナが内包されている`Pod`が生成されました。ですが生成されたものは，`Pod`だけではなく， K8sでコンテナを上手く管理するための以下のコンポーネントが生成されています。
    > 
    > - **Pod**: アプリケーションコンテナを内包するK8sリソース
    > - **ReplicaSet**: Podのライフサイクル管理をするK8sリソース
@@ -65,7 +64,7 @@ Lab1〜3ではWebサイトのゲストブック機能を提供するシンプル
    ```
    
    >補足:
-   > - **Service**: K8sリソースの一つです。K8sクラスター内のPod間通信を制御したり，外部からのリクエストを適切なPodにルーティングさせるなどの役割を担います。`Service`の種類には、`NodePort`，`LoadBalancer`，`Ingress`などがあります。
+   > - **Service**: K8sリソースの一つです。K8sクラスター内のPod間通信を制御したり，外部からのリクエストを適切なPodにルーティングさせるなどの役割を担います。`Service`の種類には、`NodePort`，`LoadBalancer`，`ClusterIP`などがあります。
    > 
    > 今回はK8sクラスターの単一のワーカーノードのIPアドレスを宛先として外部公開する方法を定義しています。(`--type=NodePort`)
    
