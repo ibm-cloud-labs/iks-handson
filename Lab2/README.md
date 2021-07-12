@@ -7,7 +7,7 @@ Lab2を実施するには，`guestbook` アプリケーションのDeploymentお
 実行例:
 
 ```bash
-$ kubectl run guestbook --image=ibmcom/guestbook:v1
+$ kubectl create deployment guestbook --image=ibmcom/guestbook:v1
 $ kubectl expose deployment guestbook --type="NodePort" --port=3000
 ```
 
@@ -231,7 +231,7 @@ v2のコンテナイメージに置き換わりましたが、再度v1のイメ�
     異なるバージョンのコンテナイメージを適用してロールアウト実行する際に，K8sリソースの一つである `ReplicaSet` が使用されています。
     
     ```bash
-    $ kubectl get replicasets -l run=guestbook
+    $ kubectl get replicasets -l app=guestbook
     NAME                   DESIRED   CURRENT   READY   AGE
     guestbook-58d97f854    0         0         0       28m
     guestbook-75786d799f   10        10        10      30m
