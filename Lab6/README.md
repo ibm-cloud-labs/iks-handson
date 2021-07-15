@@ -6,16 +6,16 @@ Lab6では、Helmの理解のために、サンプルのチャートを作って
 ## チャートを作るための参考資料
 Helmの公式サイトにチャート開発のためのドキュメントがまとめられています。
 
-- https://docs.helm.sh/developing_charts/
-- https://docs.helm.sh/chart_template_guide/
-- https://docs.helm.sh/chart_best_practices/
+- https://helm.sh/docs/community/developers/
+- https://helm.sh/docs/chart_template_guide/
+- https://helm.sh/docs/chart_best_practices/
 
 ## Helmのバージョン確認
-このガイドはv2.14ベースで記載しています。v3を利用されている場合やv2.14よりも古いバージョンを利用されている場合はバージョンを変更してください
+このガイドはv3.6.2ベースで記載しています。より古いバージョンを利用されている場合はバージョンを変更してください。
 
   ```bash
-  $ helm version --client
-  Client: &version.Version{SemVer:"v2.14.0", GitCommit:"05811b84a3f93603dd6c2fcfe57944dfa7ab7fd0", GitTreeState:"clean"}
+  $ helm version
+  version.BuildInfo{Version:"v3.6.2", GitCommit:"ee407bdf364942bcb8e8c665f82e15aa28009b71", GitTreeState:"dirty", GoVersion:"go1.16.5"}
   ```
 
 ## チャートの作成
@@ -36,9 +36,11 @@ Helmの公式サイトにチャート開発のためのドキュメントがま�
   ├── templates                      # マニフェストのテンプレートを格納するディレクトリー
   │   ├── NOTES.txt                  # OPTIONAL: チャートの使用方法を記載したプレーンテキスト
   │   ├── _helpers.tpl               # 
-  │   ├── deployment.yaml            # deployment作成用のyaml
+  │   ├── hpa.yaml                   # HPA作成用のyaml
+  │   ├── deployment.yaml            # Deployment作成用のyaml
   │   ├── ingress.yaml               # Ingress設定用のyaml
-  │   ├── service.yaml               # サービス作成用のyaml
+  │   ├── service.yaml               # Service作成用のyaml
+  │   ├── serviceaccount.yaml        # serviceAccount作成用のyaml
   │   └── tests
   │       └── test-connection.yaml
   └── values.yaml                    # このチャートのデフォルト値を記載したyaml
@@ -134,15 +136,16 @@ Go Template言語で環境により異なる値が記載されています
   ```bash
   $ helm install sample ./mychart
   NAME: sample
-  LAST DEPLOYED: Fri Jan 24 15:34:33 2020
+  LAST DEPLOYED: Thu Jul 15 18:06:30 2021
   NAMESPACE: default
   STATUS: deployed
   REVISION: 1
   NOTES:
   1. Get the application URL by running these commands:
-    export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=mychart,app.kubernetes.io/instance=sample" -o jsonpath="{.items[0].metadata.name}")
-    echo "Visit http://127.0.0.1:8080 to use your application"
-    kubectl --namespace default port-forward $POD_NAME 8080:80
+  export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=mychart,app.kubernetes.io/instance=sample" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT=$(kubectl get pod --namespace default $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace default port-forward $POD_NAME 8080:$CONTAINER_PORT
   ```
 
 問題なくデプロイができたかは、以下のコマンドで確認します:
@@ -150,7 +153,7 @@ Go Template言語で環境により異なる値が記載されています
   ```bash
   $ helm ls
   NAME  	NAMESPACE	REVISION	UPDATED                             	STATUS  	CHART        	APP VERSION
-  sample	default  	1       	2020-01-24 15:34:33.499819 +0900 JST	deployed	mychart-0.1.0	1.16.0
+  sample	default  	1       	2021-07-15 18:06:30.424957 +0900 JST	deployed	mychart-0.1.0	1.16.0
   ```
 
   ```bash
@@ -165,6 +168,7 @@ Go Template言語で環境により異なる値が記載されています
    $ kubectl port-forward sample-mychart-7f54479764-gwllt 8080:80
    Forwarding from 127.0.0.1:8080 -> 80
    Forwarding from [::1]:8080 -> 80
+   Handling connection for 8080
    ```
 
 この状態で、Webブラウザから「 http://localhost:8080 」でアクセスすればサンプルのWebページが表示されます。
@@ -237,22 +241,22 @@ templates/service.yamlのspec.ports以下のnameの後に同じインデント�
   $ helm upgrade -f value-new.yaml sample ./mychart/
   Release "sample" has been upgraded. Happy Helming!
   NAME: sample
-  LAST DEPLOYED: Fri Jan 24 15:50:09 2020
+  LAST DEPLOYED: Thu Jul 15 18:14:13 2021
   NAMESPACE: default
   STATUS: deployed
-  REVISION: 3
+  REVISION: 2
   NOTES:
   1. Get the application URL by running these commands:
-    export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services sample-mychart)
-    export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
-    echo http://$NODE_IP:$NODE_PORT
+  export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services sample-mychart)
+  export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
   ```
   
 今度は実際にNodePortでアクセスしてみましょう。「ibmcloud ks workers <クラスター名>」を実行し、パブリックIPアドレスを確認します。
 確認したあとで「http://<パブリックIPアドレス>:30001」でアクセスすれば、再びサンプルのアプリケーションにアクセスできます。
 
   ```bash
-  $ ibmcloud ks workers mycluster
+  $ ibmcloud ks workers --cluster mycluster
   OK
   ID                         パブリック IP     プライベート IP   マシン・タイプ   状態     状況    ゾーン   バージョン   
   kube-hou02-xxxxxxxxxx-w1   184.xxx.x.xx    10.76.194.59    free             normal   Ready   hou02    1.10.12_1543 
@@ -413,5 +417,5 @@ templates/service.yamlのspec.ports以下のnameの後に同じインデント�
 $ helm uninstall sample
 
 2) ハンズオンが終わったらクラスターを削除します
-$ ibmcloud ks cluster-rm <クラスター名>
+$ ibmcloud ks cluster rm --cluster <クラスター名>
 ```

@@ -41,7 +41,7 @@ helmのバージョン確認とレリポジトリの登録・更新
 
     実行例:
     ```bash
-    $ helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+    $ helm repo add stable https://charts.helm.sh/stable
     $ helm repo update
     Hang tight while we grab the latest from your chart repositories...
     ...Successfully got an update from the "stable" chart repository
@@ -179,7 +179,7 @@ helmのバージョン確認とレリポジトリの登録・更新
     > ワーカーノードの `Public IP` は以下のように確認します。
     > 
     > ```bash
-    > $ ibmcloud ks workers mycluster
+    > $ ibmcloud ks worker ls --cluster mycluster
     > OK
     > ID                                                 Public IP       Private IP      Machine Type   State    Status   Zone    Version
     > kube-hou02-pa705552a5a95d4bf3988c678b438ea9ec-w1   184.173.52.92   10.76.217.175   free           normal   Ready    hou02   1.10.12_1543
