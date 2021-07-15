@@ -28,7 +28,7 @@
 
 * Using managed Knative to run serverless apps in Kubernetes clusters **#knative**
 
-  https://cloud.ibm.com/docs/containers?topic=containers-knative_tutorial&locale=en#knative_tutorial
+  https://developer.ibm.com/components/knative/tutorials/
 
 ## IBM Developer - Courses
 自己学習用の研修コースをご提供。研修終了後に**バッジ**が取得できます！
@@ -56,11 +56,11 @@
 * Istio を使用して、高度なトラフィック管理機能とリクエスト追跡機能を備えたマイクロサービスを実現する **#istio**
 
   ![title](img/Manage-microservices-traffic-using-Istio-arch-flow.png)
-  https://developer.ibm.com/jp/patterns/manage-microservices-traffic-using-istio/
+  https://developer.ibm.com/components/istio/patterns/manage-microservices-traffic-using-istio/
 
 * Kubernetes 上に Java マイクロサービスをデプロイして多言語に対応する
 
-  https://developer.ibm.com/jp/patterns/deploy-java-microservices-on-kubernetes-with-polyglot-support/
+  https://github.com/IBM/japan-technology/tree/main/Code-Patterns/deploy-java-microservices-on-kubernetes-with-polyglot-support
 
 ## IBM Developer - Series
 
